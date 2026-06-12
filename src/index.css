@@ -48,9 +48,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .middle-game-row {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* 50% split */
+  grid-template-columns: 0.8fr 1.2fr; /* Symmetrical offset split */
   gap: 24px;
-  align-items: start;
+  align-items: center; /* Vertically center align forest panel with deck panel */
 }
 
 .forest-panel, .deck-panel {

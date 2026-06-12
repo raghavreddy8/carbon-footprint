@@ -68,8 +68,8 @@ describe('Carbon Footprint Calculator Utils', () => {
       expect(theme.accentColor).toBe('#F59E0B');
     });
 
-    it('should return healthy theme when score is below 55% of baseline', () => {
-      const theme = getDynamicTheme(200, 400); // ratio = 0.5
+    it('should return healthy theme when footprint is low (< 150 kg)', () => {
+      const theme = getDynamicTheme(120, 400); // low absolute value
       expect(theme.themeName).toBe('healthy');
       expect(theme.characterState).toBe('happy');
       expect(theme.accentColor).toBe('#10B981');

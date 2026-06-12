@@ -89,29 +89,22 @@ export interface DynamicTheme {
   ambientMusicSpeed: number;
 }
 
-export function getDynamicTheme(totalFootprint: number, initialTotal: number): DynamicTheme {
-  // Ratio of current footprint to the starting baseline
-  const ratio = initialTotal > 0 ? totalFootprint / initialTotal : 1;
-  
-  // High footprint corresponds to a higher ratio. But we also want to scale relative to absolute limits.
-  // E.g., if total footprint is > 300 kg, that is high. If < 150 kg, that is low.
-  let score = ratio; // Starts at 1.0 (baseline) and goes down as swaps are added.
-  
-  // If they save carbon, score decreases.
-  // 0.85+ -> High/Polluted (Red/Orange warning)
-  // 0.6 to 0.85 -> Neutral/Transition (Yellow/Sand)
-  // < 0.6 -> Clean/Eco-champion (Green/Mint)
-  if (score >= 0.8) {
+export function getDynamicTheme(totalFootprint: number, _initialTotal: number): DynamicTheme {
+  // Evaluate states based on absolute monthly carbon footprint values:
+  // High Footprint (> 300 kg/mo): Polluted / Sad
+  // Moderate Footprint (150 - 300 kg/mo): Neutral / Balanced
+  // Low Footprint (< 150 kg/mo): Healthy / Happy
+  if (totalFootprint > 300) {
     return {
       themeName: 'polluted',
       accentColor: '#EF4444', // Red-500
-      backgroundColor: '#FEF2F2', // Red-50 (or warm grey)
+      backgroundColor: '#FEF2F2', // Red-50
       borderColor: '#111827',
       shadowColor: '#EF4444',
       characterState: 'sad',
       ambientMusicSpeed: 1.5 // faster/more urgent sound
     };
-  } else if (score >= 0.55) {
+  } else if (totalFootprint >= 150) {
     return {
       themeName: 'neutral',
       accentColor: '#F59E0B', // Amber-500
