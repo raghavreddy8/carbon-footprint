@@ -98,6 +98,17 @@ export const Insights: React.FC<InsightsProps> = ({
 
   const recommendations = getPersonalizedInsights();
 
+  /**
+   * Safely renders text with **bold** markdown syntax as React <strong> nodes.
+   * This avoids dangerouslySetInnerHTML and any XSS risk entirely.
+   */
+  const renderBoldText = (text: string): React.ReactNode[] => {
+    const parts = text.split(/\*\*(.*?)\*\*/g);
+    return parts.map((part, i) =>
+      i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+    );
+  };
+
   const handleRemove = (id: string) => {
     audio.playDecline();
     onRemoveSwap(id);
@@ -213,12 +224,9 @@ export const Insights: React.FC<InsightsProps> = ({
                 }}
               >
                 <Compass size={18} style={{ color: '#D97706', marginTop: '3px', flexShrink: 0 }} />
-                <p
-                  style={{ fontSize: '12px', margin: 0, color: '#111827', lineHeight: 1.4 }}
-                  dangerouslySetInnerHTML={{
-                    __html: rec.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                  }}
-                />
+                <p style={{ fontSize: '12px', margin: 0, color: '#111827', lineHeight: 1.4 }}>
+                  {renderBoldText(rec)}
+                </p>
               </div>
             ))}
           </div>

@@ -4,10 +4,11 @@ import { Onboarding } from './Onboarding';
 
 /**
  * @file Onboarding.test.tsx
- * @description Integration tests for the Onboarding questionnaire flow.
+ * @description Integration tests for the multi-step CO2 Matcher onboarding questionnaire.
+ * Validates step progression, answer state, back-navigation, and final callback payload.
  */
 
-// Mock audio utility to avoid audio context instantiation errors in jsdom
+// Mock audio utility to prevent AudioContext instantiation in jsdom
 vi.mock('../utils/audio', () => ({
   audio: {
     playSuccess: vi.fn(),
@@ -17,43 +18,31 @@ vi.mock('../utils/audio', () => ({
 }));
 
 describe('Onboarding Component', () => {
-  it('runs through all steps of the onboarding questionnaire and calls onComplete with correct values', () => {
+  it('renders Step 1 commute question on initial mount', () => {
+    render(<Onboarding onComplete={vi.fn()} />);
+    expect(screen.getByText(/How do you commute\?/i)).toBeInTheDocument();
+    expect(screen.getByText('Solo Driver')).toBeInTheDocument();
+    expect(screen.getByText('Active Commute')).toBeInTheDocument();
+  });
+
+  it('completes full questionnaire with eco-friendly choices and calls onComplete', () => {
     const handleComplete = vi.fn();
     render(<Onboarding onComplete={handleComplete} />);
 
-    // Step 1 check
-    expect(screen.getByText(/How do you commute\?/i)).toBeDefined();
-    
-    // Select Active Commute (bike_walk)
-    const activeCommuteBtn = screen.getByText('Active Commute');
-    fireEvent.click(activeCommuteBtn);
-
-    // Go to step 2
-    const nextBtn = screen.getByRole('button', { name: /next step/i });
-    fireEvent.click(nextBtn);
-
-    // Step 2 check
-    expect(screen.getByText(/What does your diet look like\?/i)).toBeDefined();
-    
-    // Select Plant-Based (vegan)
-    const veganBtn = screen.getByText('Plant-Based');
-    fireEvent.click(veganBtn);
-
-    // Go to step 3
+    // Step 1: Select Active Commute (bike_walk)
+    fireEvent.click(screen.getByText('Active Commute'));
     fireEvent.click(screen.getByRole('button', { name: /next step/i }));
 
-    // Step 3 check
-    expect(screen.getByText(/How do you heat\/cool your home\?/i)).toBeDefined();
-    
-    // Select Eco Conscious
-    const ecoBtn = screen.getByText('Eco Conscious');
-    fireEvent.click(ecoBtn);
+    // Step 2: Verify step rendered, select Plant-Based (vegan)
+    expect(screen.getByText(/What does your diet look like\?/i)).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Plant-Based'));
+    fireEvent.click(screen.getByRole('button', { name: /next step/i }));
 
-    // Generate forest / Complete
-    const generateBtn = screen.getByRole('button', { name: /generate forest/i });
-    fireEvent.click(generateBtn);
+    // Step 3: Verify step rendered, select Eco Conscious
+    expect(screen.getByText(/How do you heat\/cool your home\?/i)).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Eco Conscious'));
+    fireEvent.click(screen.getByRole('button', { name: /generate forest/i }));
 
-    // Verify callback
     expect(handleComplete).toHaveBeenCalledTimes(1);
     expect(handleComplete).toHaveBeenCalledWith({
       commute: 'bike_walk',
@@ -62,43 +51,70 @@ describe('Onboarding Component', () => {
     });
   });
 
-  it('allows user to navigate back and change previous answers', () => {
+  it('completes full questionnaire with high-emission choices and calls onComplete', () => {
     const handleComplete = vi.fn();
     render(<Onboarding onComplete={handleComplete} />);
 
-    // Step 1 select carpooler
-    fireEvent.click(screen.getByText('Carpooler'));
-    
-    // Next
-    fireEvent.click(screen.getByRole('button', { name: /next step/i }));
-    
-    // Back
-    fireEvent.click(screen.getByRole('button', { name: /back/i }));
-
-    // Check we are back to Step 1 and the option is still carpooler (or we can select Solo Driver)
-    expect(screen.getByText(/How do you commute\?/i)).toBeDefined();
+    // Step 1: Solo car
     fireEvent.click(screen.getByText('Solo Driver'));
-
-    // Go to Step 2
     fireEvent.click(screen.getByRole('button', { name: /next step/i }));
-    
-    // Step 2 select Vegetarian
-    fireEvent.click(screen.getByText('Vegetarian'));
 
-    // Go to Step 3
+    // Step 2: Heavy meat
+    fireEvent.click(screen.getByText('Meat Enthusiast'));
     fireEvent.click(screen.getByRole('button', { name: /next step/i }));
-    
-    // Step 3 select Average User
-    fireEvent.click(screen.getByText('Average User'));
 
-    // Finish
+    // Step 3: High power user
+    fireEvent.click(screen.getByText('High Power User'));
     fireEvent.click(screen.getByRole('button', { name: /generate forest/i }));
 
-    // Expect answers to contain commute: solo_car (overridden), diet: vegetarian, home: moderate
+    expect(handleComplete).toHaveBeenCalledWith({
+      commute: 'solo_car',
+      diet: 'heavy_meat',
+      home: 'large_ac'
+    });
+  });
+
+  it('allows back-navigation and overriding a previous answer', () => {
+    const handleComplete = vi.fn();
+    render(<Onboarding onComplete={handleComplete} />);
+
+    // Step 1: Select Carpooler first, then go back and change to Solo Driver
+    fireEvent.click(screen.getByText('Carpooler'));
+    fireEvent.click(screen.getByRole('button', { name: /next step/i }));
+
+    // Go back to Step 1
+    fireEvent.click(screen.getByRole('button', { name: /back/i }));
+    expect(screen.getByText(/How do you commute\?/i)).toBeInTheDocument();
+
+    // Override to Solo Driver
+    fireEvent.click(screen.getByText('Solo Driver'));
+    fireEvent.click(screen.getByRole('button', { name: /next step/i }));
+
+    // Step 2: Vegetarian
+    fireEvent.click(screen.getByText('Vegetarian'));
+    fireEvent.click(screen.getByRole('button', { name: /next step/i }));
+
+    // Step 3: Average User
+    fireEvent.click(screen.getByText('Average User'));
+    fireEvent.click(screen.getByRole('button', { name: /generate forest/i }));
+
     expect(handleComplete).toHaveBeenCalledWith({
       commute: 'solo_car',
       diet: 'vegetarian',
       home: 'moderate'
     });
+  });
+
+  it('does not show Back button on Step 1', () => {
+    render(<Onboarding onComplete={vi.fn()} />);
+    expect(screen.queryByRole('button', { name: /back/i })).not.toBeInTheDocument();
+  });
+
+  it('shows Back button on Step 2 and Step 3', () => {
+    render(<Onboarding onComplete={vi.fn()} />);
+    fireEvent.click(screen.getByRole('button', { name: /next step/i }));
+    expect(screen.getByRole('button', { name: /back/i })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /next step/i }));
+    expect(screen.getByRole('button', { name: /back/i })).toBeInTheDocument();
   });
 });

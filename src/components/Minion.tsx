@@ -144,8 +144,13 @@ export const Minion: React.FC<MinionProps> = ({ state }) => {
         }
       `}</style>
 
-      {/* Dynamic speech bubble */}
-      <div className="minion-speech-bubble">
+      {/* Dynamic speech bubble — live region so screen readers announce carbon tips */}
+      <div
+        className="minion-speech-bubble"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
         {speechBubbleText}
       </div>
 

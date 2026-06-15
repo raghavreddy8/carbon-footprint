@@ -1,9 +1,15 @@
 // Retro 8-Bit & Lofi Synthesizer using Web Audio API
+
+/** Typed interface to support vendor-prefixed AudioContext safely */
+interface WindowWithVendorAudio extends Window {
+  webkitAudioContext?: typeof AudioContext;
+}
+
 class AudioManager {
   private ctx: AudioContext | null = null;
   private isMuted: boolean = true; // start muted for autoplay policy
-  private ambientInterval: any = null;
-  private vinylInterval: any = null;
+  private ambientInterval: ReturnType<typeof setInterval> | null = null;
+  private vinylInterval: ReturnType<typeof setInterval> | null = null;
   private currentCarbonLevel: number = 1.0; // 0 (healthy) to 1 (polluted)
   
   // Lofi loop variables
@@ -16,9 +22,13 @@ class AudioManager {
 
   private init() {
     if (!this.ctx) {
-      this.ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const win = window as WindowWithVendorAudio;
+      const AudioCtx = window.AudioContext || win.webkitAudioContext;
+      if (AudioCtx) {
+        this.ctx = new AudioCtx();
+      }
     }
-    if (this.ctx.state === 'suspended') {
+    if (this.ctx && this.ctx.state === 'suspended') {
       this.ctx.resume();
     }
   }
