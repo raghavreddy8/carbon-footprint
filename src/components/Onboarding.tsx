@@ -5,6 +5,12 @@ import { NeoButton } from './UI/NeoButton';
 import { audio } from '../utils/audio';
 import { Car, Bike, Utensils, Home, Zap, Heart, Sparkles } from 'lucide-react';
 
+/**
+ * @file Onboarding.tsx
+ * @description Renders a multi-step questionnaire (CO2 Matcher) allowing users to input
+ * their commute, diet, and home energy consumption profile, and triggers the dashboard on completion.
+ */
+
 interface OnboardingProps {
   onComplete: (answers: OnboardingAnswers) => void;
 }

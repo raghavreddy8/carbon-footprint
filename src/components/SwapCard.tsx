@@ -3,6 +3,13 @@ import { type Swap } from '../data/swaps';
 import { NeoPanel } from './UI/NeoPanel';
 import { Zap, Heart, Car, Home, ArrowLeft, ArrowRight } from 'lucide-react';
 
+/**
+ * @file SwapCard.tsx
+ * @description Renders a single carbon-reduction habit card styled with neobrutalist designs.
+ * Supports touch/mouse drag-to-swipe physics, keyboard controls (left/right arrows),
+ * dynamic swipe indicator overlays (green commit / red skip), and difficulty ratings.
+ */
+
 interface SwapCardProps {
   swap: Swap;
   onSwipeLeft: () => void;

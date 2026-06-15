@@ -2,6 +2,14 @@ import React, { useRef, useEffect } from 'react';
 import { type Swap } from '../data/swaps';
 import { NeoPanel } from './UI/NeoPanel';
 
+/**
+ * @file Forest.tsx
+ * @description Renders a high-resolution, interactive canvas representing the virtual forest.
+ * It dynamically visualizes committed swap actions as custom trees (pines for transport, apples for diet,
+ * glowing nodes for energy, and shrubs for goods) and shows dynamic ecological state animations
+ * (sun pulses, clouds, bird flight, jumping bunny, toxic acid rain/drone scans) matching the current carbon theme.
+ */
+
 interface ForestProps {
   activeSwaps: Swap[];
   themeState: 'healthy' | 'neutral' | 'polluted';

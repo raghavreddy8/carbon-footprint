@@ -1,5 +1,11 @@
 import React from 'react';
 
+/**
+ * @file NeoPanel.tsx
+ * @description A reusable card/panel component designed with a bold neo-brutalist aesthetic,
+ * featuring a title bar with window controls styling and customizable backgrounds and borders.
+ */
+
 interface NeoPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   backgroundColor?: string;
   borderColor?: string;

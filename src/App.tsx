@@ -164,8 +164,7 @@ function App() {
                 alignItems: 'center',
                 gap: '6px',
                 boxShadow: '3px 3px 0px #111827',
-                transition: 'all 0.1s ease',
-                outline: 'none'
+                transition: 'all 0.1s ease'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translate(-2px, -2px)';
@@ -188,6 +187,7 @@ function App() {
           {/* Sound Toggle */}
           <button
             onClick={handleToggleMute}
+            aria-label={isMuted ? 'Unmute Sound Effects' : 'Mute Sound Effects'}
             style={{
               backgroundColor: isMuted ? '#F3F4F6' : theme.accentColor,
               color: isMuted ? '#666' : '#FFF',
@@ -199,8 +199,7 @@ function App() {
               alignItems: 'center',
               justifyContent: 'center',
               boxShadow: '3px 3px 0px #111827',
-              transition: 'all 0.2s ease',
-              outline: 'none'
+              transition: 'all 0.2s ease'
             }}
             title={isMuted ? 'Unmute Sound Effects' : 'Mute Sound Effects'}
           >

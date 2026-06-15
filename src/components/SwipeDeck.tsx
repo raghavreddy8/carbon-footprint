@@ -5,6 +5,13 @@ import { NeoButton } from './UI/NeoButton';
 import { audio } from '../utils/audio';
 import { X, Check, RotateCcw, Award } from 'lucide-react';
 
+/**
+ * @file SwipeDeck.tsx
+ * @description Renders a stack/deck of swap habit cards that the user can swipe through.
+ * Supports swiping right to commit, swiping left to skip, keyboard arrow navigation,
+ * reset/replay functionality, and displays card controls with full screen reader attributes.
+ */
+
 interface SwipeDeckProps {
   swaps: Swap[];
   activeSwapIds: string[];
@@ -131,6 +138,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
         <div style={{ display: 'flex', gap: '24px', justifyContent: 'center', marginTop: '10px' }}>
           <button
             onClick={() => handleSkipCard(currentCard.id)}
+            aria-label="Skip this swap action"
             style={{
               width: '60px',
               height: '60px',
@@ -142,8 +150,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
               justifyContent: 'center',
               cursor: 'pointer',
               boxShadow: '3px 3px 0px #111827',
-              transition: 'all 0.1s ease',
-              outline: 'none'
+              transition: 'all 0.1s ease'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translate(-2px, -2px)';
@@ -165,6 +172,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
 
           <button
             onClick={() => handleCommitCard(currentCard.id)}
+            aria-label="Commit to this swap action"
             style={{
               width: '60px',
               height: '60px',
@@ -176,8 +184,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
               justifyContent: 'center',
               cursor: 'pointer',
               boxShadow: '3px 3px 0px #111827',
-              transition: 'all 0.1s ease',
-              outline: 'none'
+              transition: 'all 0.1s ease'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translate(-2px, -2px)';

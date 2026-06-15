@@ -1,5 +1,11 @@
 import React from 'react';
 
+/**
+ * @file NeoButton.tsx
+ * @description A custom button component styled with bold borders and 3D offset shadow effects in a neo-brutalist style.
+ * Supports hover transitions and active press down translation animations.
+ */
+
 interface NeoButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'danger' | 'success';
   size?: 'sm' | 'md' | 'lg';
@@ -45,7 +51,6 @@ export const NeoButton: React.FC<NeoButtonProps> = ({
     color: colors.text,
     boxShadow: `3px 3px 0px ${shadowColor}`,
     transition: 'transform 0.1s ease, box-shadow 0.1s ease',
-    outline: 'none',
     ...style
   };
 

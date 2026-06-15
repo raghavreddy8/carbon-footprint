@@ -6,6 +6,14 @@ import { NeoButton } from './UI/NeoButton';
 import { audio } from '../utils/audio';
 import { Trash, Info, Trees, Flame, Compass, RefreshCw, Zap } from 'lucide-react';
 
+/**
+ * @file Insights.tsx
+ * @description Renders the carbon footprint breakdown dashboard. Includes comparative starting
+ * vs. current footprint progress metrics, dynamic climate impact equivalents calculations,
+ * personalized recommendations (category-specific advice and synergy highlights),
+ * and a list of active committed swaps with cancellation functionality.
+ */
+
 interface InsightsProps {
   initialBreakdown: FootprintBreakdown;
   activeSwaps: Swap[];
@@ -247,6 +255,7 @@ export const Insights: React.FC<InsightsProps> = ({
 
                 <button
                   onClick={() => handleRemove(swap.id)}
+                  aria-label={`Cancel active swap: ${swap.title}`}
                   style={{
                     backgroundColor: '#FEE2E2',
                     border: '2px solid #111827',

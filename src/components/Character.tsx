@@ -1,6 +1,14 @@
 import React from 'react';
 import { NeoPanel } from './UI/NeoPanel';
 
+/**
+ * @file Character.tsx
+ * @description Renders the horizontal Eco-Buddies status console containing two side-characters:
+ * Leafy (a nature spirit leaf SVG) and Sparky (a clean-energy flame/electricity bolt SVG).
+ * Both characters dynamically adapt their expressions, styling, and animations (happy/dancing,
+ * neutral/sweating, sad/wilted/gasping) to align with the current carbon levels.
+ */
+
 interface CharacterProps {
   state: 'happy' | 'neutral' | 'sad';
   savedKg: number;
